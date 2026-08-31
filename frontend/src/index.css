@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --razorpay-blue: #2b6cb0;
+    --razorpay-cyan: #00d2ff;
+    --razorpay-dark: #0b132b;
+    --razorpay-navy: #131b36;
+    --razorpay-border: #202d54;
+  }
+  
+  body {
+    background-color: #0b132b;
+    color: #e2e8f0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b132b;
+}
+::-webkit-scrollbar-thumb {
+  background: #202d54;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a86ff;
+}
+
+/* Glassmorphism Card Style */
+.rz-card {
+  background: rgba(19, 27, 54, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(32, 45, 84, 0.8);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rz-card:hover {
+  border-color: rgba(58, 134, 255, 0.4);
+  box-shadow: 0 12px 35px -8px rgba(0, 210, 255, 0.15);
+}
+
+.rz-card-glow {
+  background: linear-gradient(135deg, rgba(19, 27, 54, 0.9) 0%, rgba(11, 19, 43, 0.95) 100%);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.12);
+}
+
+/* Glow effects */
+.glow-cyan {
+  text-shadow: 0 0 12px rgba(0, 210, 255, 0.6);
+}
+
+.glow-cyan-card {
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+}
+
+/* Keyframe Animations */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.animate-pulse-slow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+.scanline {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d2ff, transparent);
+  animation: scanline 4s linear infinite;
+}

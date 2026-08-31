@@ -1,0 +1,6 @@
+User,Price,Error
+JohnDoe,250.00,Insuff fund
+Alice123,99.99,card expire
+BobSmith,1200.50,declined by bank
+Eve,499.00,need 2fa auth
+Mallory,899.99,unknown problem
