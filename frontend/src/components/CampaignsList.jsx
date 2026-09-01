@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import WhatsAppSimulator from './WhatsAppSimulator';
 import { 
   Search, 
   Filter, 
@@ -23,6 +24,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [timeFilter, setTimeFilter] = useState('ALL_TIME');
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [chatCampaign, setChatCampaign] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -239,6 +241,12 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                       >
                         Inspect Log
                       </button>
+                      <button
+                          onClick={() => setChatCampaign(item)}
+                          className="px-2.5 py-1.5 rounded-lg bg-[#00a884] hover:bg-[#008f6f] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" /> Negotiate
+                        </button>
 
                       {item.status !== 'RECOVERED' && (
                         <button
@@ -346,6 +354,13 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             </div>
           </div>
         </div>
+      )}
+
+      {chatCampaign && (
+        <WhatsAppSimulator 
+          campaign={chatCampaign}
+          onClose={() => setChatCampaign(null)}
+        />
       )}
     </div>
   );

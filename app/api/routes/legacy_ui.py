@@ -4,6 +4,22 @@ from datetime import datetime
 import json
 import random
 
+def calculate_smart_risk(reason, plan, amt):
+    score = 50
+    if "card_expired" in reason.lower():
+        score -= 40
+    elif "insufficient_funds" in reason.lower():
+        score -= 10
+    elif "fraud" in reason.lower() or "do_not_honor" in reason.lower():
+        score += 35
+    if "enterprise" in plan.lower():
+        score -= 10
+    elif "basic" in plan.lower():
+        score += 15
+    if amt > 10000:
+        score += 10
+    return max(1, min(99, score))
+
 router = APIRouter()
 
 # Mock data equivalent
@@ -90,11 +106,13 @@ async def get_overview():
 
 @router.get("/campaigns")
 async def get_campaigns():
+    state = load_state()
     return state["campaigns"]
 
 @router.delete("/campaigns/{campaign_id}")
 async def delete_campaign(campaign_id: str):
     global state
+    state = load_state()
     for i, c in enumerate(state["campaigns"]):
         if c["id"] == campaign_id:
             # Adjust metrics
@@ -124,6 +142,7 @@ import csv
 @router.post("/upload-csv")
 async def upload_csv(file: UploadFile = File(...)):
     global state
+    state = load_state()
     content = await file.read()
     try:
         text = content.decode("utf-8-sig")
@@ -175,7 +194,7 @@ async def upload_csv(file: UploadFile = File(...)):
             "amount": amount,
             "plan": plan,
             "failureReasonText": failureReason,
-            "riskScore": audit_log.decision.get("risk_score", 50),
+            "riskScore": calculate_smart_risk(failureReason, plan, amount),
             "channelUsed": audit_log.decision.get("primary_channel", "WhatsApp"),
             "status": "IN_RECOVERY",
             "recoveryLinkId": f"paylink_rz_{random.randint(100000, 999999)}",
@@ -196,6 +215,8 @@ async def upload_csv(file: UploadFile = File(...)):
 
 @router.post("/simulate-failure")
 async def simulate_failure(request: Request):
+    global state
+    state = load_state()
     # This integrates with our backend Logic!
     from app.schemas.events import FailedPaymentEvent
     from app.core.recovery_orchestrator import RecoveryOrchestrator
@@ -233,7 +254,7 @@ async def simulate_failure(request: Request):
       "failedAt": datetime.utcnow().isoformat(),
       "failureReason": failureReason,
       "failureReasonText": audit_log.classification,
-      "riskScore": 75,
+      "riskScore": calculate_smart_risk(failureReason, body.get("plan", ""), amount),
       "status": "IN_RECOVERY",
       "channelUsed": "WhatsApp",
       "agentActionSummary": audit_log.decision.get('rationale', 'Action taken by AI'),
@@ -298,7 +319,6 @@ async def simulate_failure(request: Request):
         }
     }
     
-    global state
     state["metrics"]["totalFailedPayments"] += 1
     state["metrics"]["arrAtRisk"] += amount
     state["metrics"]["activeRecoveryCampaigns"] += 1
@@ -328,3 +348,9 @@ async def recover_payment(request: Request):
             return {"success": True, "campaign": c}
             
     return {"success": False, "message": "Not found"}
+
+
+
+
+
+

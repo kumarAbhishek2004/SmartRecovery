@@ -1,4 +1,5 @@
 import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { 
   ShieldCheck, 
   TrendingUp, 
@@ -13,6 +14,16 @@ import {
   Clock
 } from 'lucide-react';
 
+const recoveryChartData = [
+  { name: 'Mon', recovered: 4000, risk: 2400 },
+  { name: 'Tue', recovered: 3000, risk: 1398 },
+  { name: 'Wed', recovered: 9800, risk: 2000 },
+  { name: 'Thu', recovered: 3908, risk: 2780 },
+  { name: 'Fri', recovered: 4800, risk: 1890 },
+  { name: 'Sat', recovered: 3800, risk: 2390 },
+  { name: 'Sun', recovered: 4300, risk: 3490 },
+];
+
 export default function Dashboard({ data, onTabChange, onTriggerSimulator }) {
   if (!data || !data.metrics) {
     return (
@@ -24,8 +35,8 @@ export default function Dashboard({ data, onTabChange, onTriggerSimulator }) {
 
   const { metrics, failureReasonsDistribution, merchantInfo } = data;
 
-  const formattedARRRisk = `₹${(metrics.arrAtRisk / 100000).toFixed(2)} Lakhs`;
-  const formattedARRRecovered = `₹${(metrics.arrRecovered / 100000).toFixed(2)} Lakhs`;
+  const formattedARRRisk = `â‚¹${(metrics.arrAtRisk / 100000).toFixed(2)} Lakhs`;
+  const formattedARRRecovered = `â‚¹${(metrics.arrRecovered / 100000).toFixed(2)} Lakhs`;
 
   return (
     <div className="space-y-6">
@@ -48,6 +59,44 @@ export default function Dashboard({ data, onTabChange, onTriggerSimulator }) {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={async () => {
+                try {
+                  await fetch('/api/webhooks/razorpay', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      event: "payment.failed",
+                      payload: {
+                        payment: {
+                          entity: {
+                            amount: 499900,
+                            email: "demo.webhook@razorpay.com",
+                            contact: "+919876543210",
+                            error_description: "insufficient_funds"
+                          }
+                        }
+                      }
+                    })
+                  });
+                  window.location.reload();
+                } catch (e) { console.error(e) }
+              }}
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer border border-slate-600"
+            >
+              <Activity className="w-4 h-4 text-emerald-400" /> Simulate Webhook
+            </button>
+            <button
+              onClick={async () => {
+                try {
+                  await fetch('/api/admin/fast-forward', { method: 'POST' });
+                  window.location.reload();
+                } catch (e) { console.error(e) }
+              }}
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer border border-slate-600"
+            >
+              <Clock className="w-4 h-4 text-[#00d2ff]" /> Fast Forward (3 Days)
+            </button>
             <button
               onClick={onTriggerSimulator}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#3a86ff] to-[#00d2ff] text-white font-semibold text-sm shadow-lg shadow-blue-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all flex items-center gap-2 cursor-pointer"
@@ -124,6 +173,30 @@ export default function Dashboard({ data, onTabChange, onTriggerSimulator }) {
               Smart Retry schedule vs 72h manual
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Live Analytics Chart */}
+      <div className="rz-card p-6 border border-[#00d2ff]/20 bg-gradient-to-b from-[#131b36] to-[#0b132b]">
+        <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6">
+          <TrendingUp className="w-5 h-5 text-[#10b981]" />
+          7-Day Revenue Recovery Analytics
+        </h3>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={recoveryChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+              <XAxis dataKey="name" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
+              <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} tickFormatter={(value) => `₹${value}`} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '8px' }}
+                itemStyle={{ color: '#e2e8f0' }}
+              />
+              <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px', color: '#cbd5e1' }} />
+              <Line type="monotone" dataKey="recovered" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2 }} activeDot={{ r: 6 }} name="Recovered (₹)" />
+              <Line type="monotone" dataKey="risk" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} name="At Risk (₹)" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

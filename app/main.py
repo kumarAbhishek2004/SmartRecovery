@@ -1,23 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.router import api_router
+from app.api.routes import legacy_ui, chat, webhooks
 
-app = FastAPI(
-    title="AI Revenue Recovery Agent API",
-    description="API for classifying and recovering failed payments.",
-    version="1.0.0"
-)
+app = FastAPI(title="SmartRecovery Core Engine")
 
-# Enable CORS for the frontend
+# Setup CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins for demo
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix="/api")
+app.include_router(webhooks.router, prefix="/api/webhooks", tags=["Webhooks"])
+app.include_router(legacy_ui.router, prefix="/api", tags=["Legacy UI"])
+app.include_router(chat.router, prefix="/api", tags=["Chat"])
 
 @app.get("/")
 def read_root():
