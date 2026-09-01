@@ -1,17 +1,8 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { 
-  ShieldCheck, 
-  TrendingUp, 
-  AlertTriangle, 
-  RefreshCw, 
-  CheckCircle2, 
-  DollarSign, 
-  Activity, 
-  ArrowUpRight, 
-  Zap,
-  Layers,
-  Clock
+  ShieldCheck, TrendingUp, AlertTriangle, RefreshCw, CheckCircle2, 
+  DollarSign, Activity, ArrowUpRight, Zap, Layers, Clock, Terminal, Cpu
 } from 'lucide-react';
 
 const recoveryChartData = [
@@ -35,278 +26,230 @@ export default function Dashboard({ data, onTabChange, onTriggerSimulator }) {
 
   const { metrics, failureReasonsDistribution, merchantInfo } = data;
 
-  const formattedARRRisk = `â‚¹${(metrics.arrAtRisk / 100000).toFixed(2)} Lakhs`;
-  const formattedARRRecovered = `â‚¹${(metrics.arrRecovered / 100000).toFixed(2)} Lakhs`;
+  const formattedARRRisk = `₹${(metrics.arrAtRisk / 100000).toFixed(2)} L`;
+  const formattedARRRecovered = `₹${(metrics.arrRecovered / 100000).toFixed(2)} L`;
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner & Quick Action */}
-      <div className="rz-card p-6 bg-gradient-to-r from-[#131b36] via-[#1c2541] to-[#0b132b] relative overflow-hidden">
-        <div className="scanline"></div>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#00d2ff]/20 text-[#00d2ff] border border-[#00d2ff]/30">
-                Razorpay Merchant Partner
-              </span>
-              <span className="text-xs text-slate-400 font-mono">{merchantInfo.merchantId}</span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-              SmartRecovery <span className="text-[#00d2ff] glow-cyan">Command Center</span>
-            </h1>
-            <p className="text-sm text-slate-300 mt-1 max-w-2xl">
-              Autonomous multi-agent payment recovery for {merchantInfo.name}. Autonomous dunning, smart retry scheduling & instant UPI intent link generation.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={async () => {
-                try {
-                  await fetch('/api/webhooks/razorpay', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      event: "payment.failed",
-                      payload: {
-                        payment: {
-                          entity: {
-                            amount: 499900,
-                            email: "demo.webhook@razorpay.com",
-                            contact: "+919876543210",
-                            error_description: "insufficient_funds"
-                          }
-                        }
-                      }
-                    })
-                  });
-                  window.location.reload();
-                } catch (e) { console.error(e) }
-              }}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer border border-slate-600"
-            >
-              <Activity className="w-4 h-4 text-emerald-400" /> Simulate Webhook
-            </button>
-            <button
-              onClick={async () => {
-                try {
-                  await fetch('/api/admin/fast-forward', { method: 'POST' });
-                  window.location.reload();
-                } catch (e) { console.error(e) }
-              }}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer border border-slate-600"
-            >
-              <Clock className="w-4 h-4 text-[#00d2ff]" /> Fast Forward (3 Days)
-            </button>
-            <button
-              onClick={onTriggerSimulator}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#3a86ff] to-[#00d2ff] text-white font-semibold text-sm shadow-lg shadow-blue-500/25 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <Zap className="w-4 h-4 fill-white" />
-              Launch AI Simulator
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: ARR Recovered */}
-        <div className="rz-card p-5 border-l-4 border-l-[#10b981] relative">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
-            <span>Recovered ARR</span>
-            <div className="p-2 rounded-lg bg-[#10b981]/15 text-[#10b981]">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-bold text-white tracking-tight">{formattedARRRecovered}</div>
-            <div className="flex items-center text-xs text-[#10b981] font-semibold mt-1">
-              <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
-              +14.2% this month
-            </div>
-          </div>
-        </div>
-
-        {/* Card 2: ARR at Risk */}
-        <div className="rz-card p-5 border-l-4 border-l-[#f59e0b] relative">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
-            <span>ARR at Risk</span>
-            <div className="p-2 rounded-lg bg-[#f59e0b]/15 text-[#f59e0b]">
-              <AlertTriangle className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-bold text-white tracking-tight">{formattedARRRisk}</div>
-            <div className="text-xs text-slate-400 mt-1">
-              {metrics.activeRecoveryCampaigns} active dunning loops
-            </div>
-          </div>
-        </div>
-
-        {/* Card 3: Recovery Rate */}
-        <div className="rz-card p-5 border-l-4 border-l-[#00d2ff] relative">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
-            <span>Recovery Rate</span>
-            <div className="p-2 rounded-lg bg-[#00d2ff]/15 text-[#00d2ff]">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-bold text-[#00d2ff] tracking-tight">{metrics.recoverySuccessRate}%</div>
-            <div className="text-xs text-emerald-400 font-semibold mt-1">
-              Industry avg: 35% (SmartRecovery: +36.9%)
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4: Avg Recovery Time */}
-        <div className="rz-card p-5 border-l-4 border-l-[#8b5cf6] relative">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
-            <span>Avg Recovery Time</span>
-            <div className="p-2 rounded-lg bg-[#8b5cf6]/15 text-[#8b5cf6]">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-2xl font-bold text-white tracking-tight">{metrics.avgRecoveryTimeHours} Hours</div>
-            <div className="text-xs text-slate-400 mt-1">
-              Smart Retry schedule vs 72h manual
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Live Analytics Chart */}
-      <div className="rz-card p-6 border border-[#00d2ff]/20 bg-gradient-to-b from-[#131b36] to-[#0b132b]">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6">
-          <TrendingUp className="w-5 h-5 text-[#10b981]" />
-          7-Day Revenue Recovery Analytics
-        </h3>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={recoveryChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
-              <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} tickFormatter={(value) => `₹${value}`} />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '8px' }}
-                itemStyle={{ color: '#e2e8f0' }}
-              />
-              <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px', color: '#cbd5e1' }} />
-              <Line type="monotone" dataKey="recovered" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2 }} activeDot={{ r: 6 }} name="Recovered (₹)" />
-              <Line type="monotone" dataKey="risk" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} name="At Risk (₹)" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Main Section: Distribution & Agent Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2 Cols: Failure Root Causes */}
-        <div className="lg:col-span-2 rz-card p-6 space-y-4">
-          <div className="flex items-center justify-between">
+    <div className="flex flex-col lg:flex-row gap-6 h-full">
+      {/* Left Sidebar: Command & Metrics */}
+      <div className="w-full lg:w-80 flex flex-col gap-4">
+        
+        {/* Terminal Header */}
+        <div className="bg-[#131b36] border border-slate-800 rounded-sm p-4 shadow-sm">
+          <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Layers className="w-5 h-5 text-[#00d2ff]" />
-                Razorpay Payment Failure Diagnostic Breakdown
-              </h3>
-              <p className="text-xs text-slate-400">
-                Categorized in real time by SmartRecovery Failure Analysis Agent
-              </p>
+              <div className="flex items-center gap-1.5 text-[#00d2ff] mb-1">
+                <Terminal className="w-4 h-4" />
+                <span className="text-[10px] font-mono tracking-widest uppercase opacity-80">System Status</span>
+              </div>
+              <h1 className="text-lg font-bold text-slate-100 leading-tight">SmartRecovery<br/>Engine</h1>
             </div>
-            <span className="text-xs font-mono text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">
-              Total Failures: {metrics.totalFailedPayments}
-            </span>
+            <span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono rounded-sm">ONLINE</span>
+          </div>
+          
+          <div className="space-y-1 mt-4 border-t border-slate-800/50 pt-3">
+            <div className="flex justify-between text-xs">
+              <span className="text-slate-500 font-mono">MERCHANT_ID</span>
+              <span className="text-slate-300 font-mono">{merchantInfo.merchantId}</span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-slate-500 font-mono">ORG_NAME</span>
+              <span className="text-slate-300">{merchantInfo.name}</span>
+            </div>
+          </div>
+          
+          <button 
+            onClick={onTriggerSimulator}
+            className="mt-5 w-full py-2 bg-[#3a86ff] hover:bg-[#2b6cb0] text-white text-xs font-bold font-mono rounded-sm transition-colors flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(58,134,255,0.3)]"
+          >
+            <Zap className="w-3.5 h-3.5" /> INJECT FAILURE EVENT
+          </button>
+        </div>
+
+        {/* Metrics Stack */}
+        <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+          <div className="bg-[#131b36] border-l-2 border-l-rose-500 border border-slate-800/80 rounded-sm p-3">
+            <div className="text-[10px] text-slate-400 font-mono uppercase">ARR at Risk</div>
+            <div className="text-xl font-mono text-white mt-1">{formattedARRRisk}</div>
+            <div className="text-[10px] text-rose-400 mt-1 flex items-center">
+              <AlertTriangle className="w-3 h-3 mr-1" /> Critical
+            </div>
           </div>
 
-          <div className="space-y-3 pt-2">
-            {failureReasonsDistribution.map((item, idx) => (
-              <div key={idx} className="space-y-1.5 p-3 rounded-xl bg-slate-900/50 border border-slate-800/80">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-semibold text-slate-200">{item.category}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 font-mono">{item.count} events</span>
-                    <span className="font-bold font-mono text-sm" style={{ color: item.color }}>
-                      {item.percentage}%
-                    </span>
+          <div className="bg-[#131b36] border-l-2 border-l-emerald-500 border border-slate-800/80 rounded-sm p-3">
+            <div className="text-[10px] text-slate-400 font-mono uppercase">ARR Recovered</div>
+            <div className="text-xl font-mono text-emerald-400 mt-1">{formattedARRRecovered}</div>
+            <div className="text-[10px] text-emerald-500/80 mt-1 flex items-center">
+              <ArrowUpRight className="w-3 h-3 mr-1" /> +12.4% MoM
+            </div>
+          </div>
+
+          <div className="bg-[#131b36] border-l-2 border-l-[#00d2ff] border border-slate-800/80 rounded-sm p-3">
+            <div className="text-[10px] text-slate-400 font-mono uppercase">Recovery Rate</div>
+            <div className="text-xl font-mono text-[#00d2ff] mt-1">{metrics.recoveryRate}%</div>
+            <div className="text-[10px] text-[#00d2ff]/70 mt-1 flex items-center">
+              <Activity className="w-3 h-3 mr-1" /> Optimizing...
+            </div>
+          </div>
+
+          <div className="bg-[#131b36] border-l-2 border-l-amber-500 border border-slate-800/80 rounded-sm p-3">
+            <div className="text-[10px] text-slate-400 font-mono uppercase">Active Campaigns</div>
+            <div className="text-xl font-mono text-amber-400 mt-1">{metrics.activeCampaigns}</div>
+            <div className="text-[10px] text-amber-500/80 mt-1 flex items-center">
+              <Layers className="w-3 h-3 mr-1" /> In Progress
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col gap-4">
+        
+        {/* Main Chart */}
+        <div className="bg-[#131b36] border border-slate-800 rounded-sm p-5 shadow-sm flex-1 min-h-[300px]">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#00d2ff]" />
+              Telemetry: 7-Day Revenue Recovery
+            </h3>
+            <div className="flex gap-2">
+              <button className="px-2 py-1 text-[10px] font-mono bg-[#0b132b] text-slate-300 rounded-sm">1D</button>
+              <button className="px-2 py-1 text-[10px] font-mono bg-[#3a86ff]/20 text-[#3a86ff] border border-[#3a86ff]/30 rounded-sm">7D</button>
+              <button className="px-2 py-1 text-[10px] font-mono bg-[#0b132b] text-slate-300 rounded-sm">30D</button>
+            </div>
+          </div>
+          
+          <div className="h-[260px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={recoveryChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <CartesianGrid strokeDasharray="2 2" stroke="#1e293b" vertical={false} />
+                <XAxis dataKey="name" stroke="#475569" tick={{ fill: '#475569', fontSize: 11 }} axisLine={false} tickLine={false} dy={10} />
+                <YAxis stroke="#475569" tick={{ fill: '#475569', fontSize: 11 }} tickFormatter={(value) => `₹${value}`} axisLine={false} tickLine={false} dx={-10} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0b132b', border: '1px solid #1e293b', borderRadius: '4px', fontSize: '12px' }}
+                  itemStyle={{ color: '#e2e8f0' }}
+                />
+                <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11px', color: '#94a3b8' }} iconType="square" />
+                <Line type="monotone" dataKey="recovered" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: '#10b981', strokeWidth: 0 }} activeDot={{ r: 5 }} name="Recovered (₹)" />
+                <Line type="monotone" dataKey="risk" stroke="#f43f5e" strokeWidth={2} strokeDasharray="4 4" dot={false} name="At Risk (₹)" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Sub-panels */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          {/* Active Agents Module */}
+          <div className="bg-[#131b36] border border-slate-800 rounded-sm p-5 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-purple-400" />
+              Agent Subsystems
+            </h3>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-2 hover:bg-[#0b132b]/50 rounded-sm transition-colors border-l-2 border-l-transparent hover:border-l-purple-500">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-[#0b132b] rounded-sm">
+                    <Activity className="w-3.5 h-3.5 text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">Failure Diagnoser</div>
+                    <div className="text-[10px] text-slate-400">Classifies & scores churn risk</div>
                   </div>
                 </div>
-                {/* Progress bar */}
-                <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                  <div 
-                    className="h-full rounded-full transition-all duration-500" 
-                    style={{ width: `${item.percentage}%`, backgroundColor: item.color }}
-                  />
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-[10px] text-emerald-500 font-mono">IDLE</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Right Col: Autonomous Multi-Agent Core Status */}
-        <div className="rz-card p-6 space-y-4 bg-gradient-to-b from-[#131b36] to-[#0b132b]">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <Activity className="w-5 h-5 text-emerald-400" />
-            Autonomous Agent Fleet
-          </h3>
-
-          <div className="space-y-3">
-            {/* Agent 1 */}
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                  Failure Diagnoser Agent
-                </span>
-                <span className="text-[10px] uppercase tracking-wider font-mono text-emerald-400 font-bold">ONLINE</span>
+              <div className="flex items-center justify-between p-2 hover:bg-[#0b132b]/50 rounded-sm transition-colors border-l-2 border-l-transparent hover:border-l-[#3a86ff]">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-[#0b132b] rounded-sm">
+                    <Clock className="w-3.5 h-3.5 text-[#3a86ff]" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">Smart Retry Router</div>
+                    <div className="text-[10px] text-slate-400">Uptime-aware scheduling</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span className="text-[10px] text-emerald-500 font-mono">SYNCED</span>
+                </div>
               </div>
-              <p className="text-xs text-slate-400">
-                Ingests Razorpay webhooks, inspects gateway error logs & classifies root causes.
-              </p>
-            </div>
 
-            {/* Agent 2 */}
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#00d2ff] animate-ping"></span>
-                  Smart Retry & Uptime Router
-                </span>
-                <span className="text-[10px] uppercase tracking-wider font-mono text-[#00d2ff] font-bold">ONLINE</span>
+              <div className="flex items-center justify-between p-2 hover:bg-[#0b132b]/50 rounded-sm transition-colors border-l-2 border-l-transparent hover:border-l-emerald-500">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-[#0b132b] rounded-sm">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">Incentive Dunning Bot</div>
+                    <div className="text-[10px] text-slate-400">Groq-powered conversational AI</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-emerald-500 font-mono">READY</span>
+                </div>
               </div>
-              <p className="text-xs text-slate-400">
-                Monitors issuer bank uptime APIs to avoid retrying during bank outages.
-              </p>
-            </div>
-
-            {/* Agent 3 */}
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
-                  Conversational Dunning Bot
-                </span>
-                <span className="text-[10px] uppercase tracking-wider font-mono text-purple-400 font-bold">ONLINE</span>
-              </div>
-              <p className="text-xs text-slate-400">
-                Generates personalized WhatsApp/Email outreach with dynamic coupon incentives.
-              </p>
-            </div>
-
-            {/* Agent 4 */}
-            <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                  Razorpay Link Dispatcher
-                </span>
-                <span className="text-[10px] uppercase tracking-wider font-mono text-amber-400 font-bold">ONLINE</span>
-              </div>
-              <p className="text-xs text-slate-400">
-                Issues instant 1-tap UPI Intent & Magic Checkout recovery links.
-              </p>
             </div>
           </div>
+
+          {/* Diagnostics Panel */}
+          <div className="bg-[#131b36] border border-slate-800 rounded-sm p-5 shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-200 mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  Root Cause Diagnostics
+                </span>
+                <span className="text-[10px] text-slate-500 font-mono">LAST 24H</span>
+              </h3>
+              <p className="text-[11px] text-slate-400 mb-4">
+                Automated breakdown of top payment failure reasons driving involuntary churn.
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-300">Insufficient Funds</span>
+                  <span className="font-mono text-slate-400">45%</span>
+                </div>
+                <div className="w-full bg-[#0b132b] h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-amber-500 h-full" style={{ width: '45%' }}></div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-300">Bank Node Downtime</span>
+                  <span className="font-mono text-slate-400">30%</span>
+                </div>
+                <div className="w-full bg-[#0b132b] h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-[#00d2ff] h-full" style={{ width: '30%' }}></div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-300">Expired Tokens</span>
+                  <span className="font-mono text-slate-400">15%</span>
+                </div>
+                <div className="w-full bg-[#0b132b] h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-purple-500 h-full" style={{ width: '15%' }}></div>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => onTabChange('campaigns')}
+              className="mt-4 text-[10px] text-[#3a86ff] hover:text-[#2b6cb0] uppercase tracking-widest font-semibold flex items-center gap-1 transition-colors"
+            >
+              View Active Campaigns <ArrowUpRight className="w-3 h-3" />
+            </button>
+          </div>
+          
         </div>
       </div>
     </div>

@@ -62,7 +62,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
         );
       case 'IN_RECOVERY':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#00d2ff]/15 text-[#00d2ff] border border-[#00d2ff]/30 flex items-center gap-1 w-fit">
+          <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#3a86ff]/15 text-[#3a86ff] border border-[#3a86ff]/30 flex items-center gap-1 w-fit">
             <Clock className="w-3 h-3 animate-spin" /> IN RECOVERY
           </span>
         );
@@ -101,7 +101,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
-      <div className="rz-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#131A2F] border border-slate-800/80 rounded-sm shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             Active Dunning & Revenue Recovery Campaigns
@@ -126,10 +126,10 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 ${
+              className={`px-3 py-2 rounded-sm border text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 ${
                 uploadSuccess 
                   ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' 
-                  : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200'
+                  : 'bg-[#0B1021] hover:bg-slate-700 border-slate-800/80/80 text-slate-200'
               }`}
             >
               {uploadSuccess ? (
@@ -139,7 +139,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                 </>
               ) : (
                 <>
-                  <Upload className={`w-3.5 h-3.5 ${uploading ? 'animate-bounce text-[#00d2ff]' : ''}`} />
+                  <Upload className={`w-3.5 h-3.5 ${uploading ? 'animate-bounce text-[#3a86ff]' : ''}`} />
                   {uploading ? 'Processing...' : 'Upload CSV'}
                 </>
               )}
@@ -153,12 +153,12 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
               placeholder="Search customer, plan or ID..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-[#00d2ff] w-48 sm:w-64"
+              className="pl-9 pr-4 py-2 rounded-sm bg-[#131A2F] border border-slate-800/80 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-[#00d2ff] w-48 sm:w-64"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+            <div className="flex items-center bg-[#131A2F] border border-slate-800/80 rounded-sm p-1 text-xs">
               <Calendar className="w-3.5 h-3.5 text-slate-400 ml-2 mr-1" />
               <select
                 value={timeFilter}
@@ -172,12 +172,12 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
               </select>
             </div>
 
-            <div className="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+            <div className="flex items-center bg-[#131A2F] border border-slate-800/80 rounded-sm p-1 text-xs">
               {['ALL', 'RECOVERED', 'IN_RECOVERY'].map(st => (
                 <button
                   key={st}
                   onClick={() => setStatusFilter(st)}
-                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-sm text-xs font-semibold transition-all cursor-pointer ${
                     statusFilter === st 
                       ? 'bg-[#3a86ff] text-white shadow-sm' 
                       : 'text-slate-400 hover:text-slate-200'
@@ -192,10 +192,10 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
       </div>
 
       {/* Campaigns Table */}
-      <div className="rz-card overflow-hidden">
+      <div className="bg-[#131A2F] border border-slate-800/80 rounded-sm shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800">
+            <thead className="bg-[#131A2F]/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800/80">
               <tr>
                 <th className="px-5 py-3">Campaign ID</th>
                 <th className="px-5 py-3">Customer & Plan</th>
@@ -208,8 +208,8 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             </thead>
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
               {filtered.map(item => (
-                <tr key={item.id} className="hover:bg-slate-900/40 transition-colors">
-                  <td className="px-5 py-4 font-mono font-bold text-[#00d2ff]">
+                <tr key={item.id} className="hover:bg-[#131A2F]/40 transition-colors">
+                  <td className="px-5 py-4 font-mono font-bold text-[#3a86ff]">
                     {item.id}
                   </td>
                   <td className="px-5 py-4">
@@ -221,7 +221,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                   </td>
                   <td className="px-5 py-4">
                     <div className="text-slate-200 max-w-xs truncate">{item.failureReasonText}</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">Channel: {item.channelUsed}</div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">Channel: {item.channelUsed}</div>
                   </td>
                   <td className="px-5 py-4 font-mono">
                     <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
@@ -237,13 +237,13 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => setSelectedCampaign(item)}
-                        className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-colors cursor-pointer"
+                        className="px-2.5 py-1.5 rounded-sm bg-[#0B1021] hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-colors cursor-pointer"
                       >
                         Inspect Log
                       </button>
                       <button
                           onClick={() => setChatCampaign(item)}
-                          className="px-2.5 py-1.5 rounded-lg bg-[#00a884] hover:bg-[#008f6f] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1.5 rounded-sm bg-[#00a884] hover:bg-[#008f6f] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1"
                         >
                           <MessageSquare className="w-3.5 h-3.5" /> Negotiate
                         </button>
@@ -251,7 +251,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                       {item.status !== 'RECOVERED' && (
                         <button
                           onClick={() => onNavigateToCustomerPortal(item.id)}
-                          className="px-2.5 py-1.5 rounded-lg bg-[#00d2ff] hover:bg-[#00c0eb] text-slate-950 text-[11px] font-extrabold transition-colors cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1.5 rounded-sm bg-[#3a86ff] hover:bg-[#00c0eb] text-slate-950 text-[11px] font-extrabold transition-colors cursor-pointer flex items-center gap-1"
                         >
                           Recover <ArrowRight className="w-3 h-3" />
                         </button>
@@ -263,7 +263,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                             if(onDeleteCampaign) onDeleteCampaign(item.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-sm bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors cursor-pointer"
                         title="Delete Campaign"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -275,7 +275,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
 
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan="7" className="text-center py-10 text-slate-500">
+                  <td colSpan="7" className="text-center py-10 text-slate-400">
                     No active recovery campaigns match your filter criteria.
                   </td>
                 </tr>
@@ -288,10 +288,10 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
       {/* Campaign Detail Modal */}
       {selectedCampaign && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="rz-card p-6 max-w-2xl w-full bg-[#131b36] space-y-4 max-h-[90vh] overflow-y-auto border border-[#00d2ff]/40">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="bg-[#131A2F] border border-slate-800/80 rounded-sm shadow-sm p-6 max-w-2xl w-full bg-[#131A2F] space-y-4 max-h-[90vh] overflow-y-auto border border-[#00d2ff]/40">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
               <div>
-                <span className="text-xs font-mono text-[#00d2ff] font-bold">{selectedCampaign.id}</span>
+                <span className="text-xs font-mono text-[#3a86ff] font-bold">{selectedCampaign.id}</span>
                 <h3 className="text-lg font-bold text-white">{selectedCampaign.customerName} — Campaign Log</h3>
               </div>
               <button
@@ -303,7 +303,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             </div>
 
             {/* Overview Detail */}
-            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+            <div className="grid grid-cols-2 gap-3 text-xs bg-[#131A2F]/60 p-3 rounded-sm border border-slate-800/80">
               <div><span className="text-slate-400">Plan:</span> <span className="font-semibold text-white">{selectedCampaign.plan}</span></div>
               <div><span className="text-slate-400">Amount:</span> <span className="font-semibold text-white">₹{selectedCampaign.amount.toLocaleString('en-IN')}</span></div>
               <div><span className="text-slate-400">Status:</span> {getStatusBadge(selectedCampaign.status)}</div>
@@ -311,7 +311,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             </div>
 
             {/* AI Agent Action Summary */}
-            <div className="p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-xs text-blue-200">
+            <div className="p-3.5 rounded-sm bg-blue-950/40 border border-blue-500/30 text-xs text-blue-200">
               <div className="font-bold text-blue-400 mb-1">🤖 AI Recovery Strategy:</div>
               {selectedCampaign.agentActionSummary}
             </div>
@@ -319,21 +319,21 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
             {/* Timeline Log */}
             <div>
               <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Execution Audit Timeline</h4>
-              <div className="space-y-2 border-l-2 border-slate-800 pl-4 py-1">
+              <div className="space-y-2 border-l-2 border-slate-800/80 pl-4 py-1">
                 {selectedCampaign.timeline.map((t, idx) => (
                   <div key={idx} className="relative text-xs space-y-0.5">
-                    <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-[#00d2ff] border-2 border-slate-900" />
-                    <div className="text-[10px] font-mono text-slate-500">{t.time}</div>
+                    <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-[#3a86ff] border-2 border-slate-900" />
+                    <div className="text-[10px] font-mono text-slate-400">{t.time}</div>
                     <div className="text-slate-300 font-sans">{t.event}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="pt-2 flex justify-end gap-2 border-t border-slate-800">
+            <div className="pt-2 flex justify-end gap-2 border-t border-slate-800/80">
               <button
                 onClick={() => handleCopyLink(selectedCampaign.id, selectedCampaign.recoveryLink)}
-                className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-2 rounded-sm bg-[#0B1021] hover:bg-slate-700 text-xs text-white flex items-center gap-1.5 cursor-pointer"
               >
                 {copiedId === selectedCampaign.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedId === selectedCampaign.id ? "Link Copied!" : "Copy Payment Link"}
@@ -346,7 +346,7 @@ export default function CampaignsList({ campaigns = [], onNavigateToCustomerPort
                     setSelectedCampaign(null);
                     onNavigateToCustomerPortal(id);
                   }}
-                  className="px-4 py-2 rounded-xl bg-[#00d2ff] hover:bg-[#00c0eb] text-slate-950 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-sm bg-[#3a86ff] hover:bg-[#00c0eb] text-slate-950 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   Open Recovery Portal <ExternalLink className="w-3.5 h-3.5" />
                 </button>

@@ -34,11 +34,11 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
 
   if (!selectedCampaign) {
     return (
-      <div className="rz-card p-12 text-center text-slate-400 space-y-4">
+      <div className="bg-[#131A2F] border border-slate-800/80 rounded-sm shadow-sm p-12 text-center text-slate-400 space-y-4">
         <div>No active recovery campaign found.</div>
         <button
           onClick={onBackToDashboard}
-          className="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-semibold hover:bg-slate-700"
+          className="px-4 py-2 rounded-sm bg-[#0B1021] text-white text-xs font-semibold hover:bg-slate-700"
         >
           Return to Merchant Dashboard
         </button>
@@ -85,17 +85,17 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
       </button>
 
       {/* Main Payment Card */}
-      <div className="rz-card overflow-hidden border border-[#00d2ff]/40 shadow-2xl bg-[#0d1630]">
+      <div className="bg-[#131A2F] border border-slate-800/80 rounded-sm shadow-sm overflow-hidden border border-[#00d2ff]/40 shadow-lg bg-[#0d1630]">
         {/* Header Branding */}
-        <div className="bg-gradient-to-r from-[#0b132b] via-[#1c2541] to-[#0b132b] p-5 border-b border-slate-800 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#0b132b] via-[#1c2541] to-[#0b132b] p-5 border-b border-slate-800/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#3a86ff] flex items-center justify-center font-black text-white text-sm">
+            <div className="w-8 h-8 rounded-sm bg-[#3a86ff] flex items-center justify-center font-black text-white text-sm">
               R
             </div>
             <div>
               <div className="text-xs font-bold text-white flex items-center gap-1">
                 Razorpay Trusted Checkout
-                <ShieldCheck className="w-3.5 h-3.5 text-[#00d2ff]" />
+                <ShieldCheck className="w-3.5 h-3.5 text-[#3a86ff]" />
               </div>
               <div className="text-[11px] text-slate-400">AuraCloud SaaS & Digital Solutions</div>
             </div>
@@ -116,11 +116,11 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
             <div>
               <h3 className="text-xl font-bold text-white">Payment Recovered Successfully!</h3>
               <p className="text-xs text-slate-300 mt-1">
-                Transaction ID: <span className="font-mono text-[#00d2ff]">pay_rec_{Math.floor(100000 + Math.random() * 900000)}</span>
+                Transaction ID: <span className="font-mono text-[#3a86ff]">pay_rec_{Math.floor(100000 + Math.random() * 900000)}</span>
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1 text-slate-300">
+            <div className="p-4 rounded-sm bg-[#131A2F] border border-slate-800/80 text-xs space-y-1 text-slate-300">
               <div>Customer: <strong className="text-white">{selectedCampaign.customerName}</strong></div>
               <div>Subscription Plan: <strong className="text-white">{selectedCampaign.plan}</strong></div>
               <div>Amount Settled: <strong className="text-emerald-400 font-mono">₹{recoveredAmount.toLocaleString('en-IN')}</strong></div>
@@ -128,7 +128,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
 
             <button
               onClick={onBackToDashboard}
-              className="w-full py-3 rounded-xl bg-[#00d2ff] text-slate-950 font-extrabold text-sm shadow-lg hover:brightness-110 cursor-pointer"
+              className="w-full py-3 rounded-sm bg-[#3a86ff] text-slate-950 font-extrabold text-sm shadow-lg hover:brightness-110 cursor-pointer"
             >
               Back to Merchant Control Center
             </button>
@@ -136,11 +136,11 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
         ) : (
           <div className="p-6 space-y-6">
             {/* Amount & Plan Card */}
-            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-4 rounded-sm bg-[#131A2F]/80 border border-slate-800/80 flex items-center justify-between">
               <div>
                 <div className="text-xs text-slate-400">Subscription Renewal</div>
                 <div className="text-sm font-bold text-white">{selectedCampaign.plan}</div>
-                <div className="text-[11px] text-slate-500">Customer: {selectedCampaign.customerName}</div>
+                <div className="text-[11px] text-slate-400">Customer: {selectedCampaign.customerName}</div>
               </div>
               <div className="text-right">
                 {discountApplied && (
@@ -148,7 +148,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
                     ₹{rawAmount.toLocaleString('en-IN')}
                   </div>
                 )}
-                <div className="text-xl font-extrabold text-[#00d2ff] font-mono">
+                <div className="text-xl font-extrabold text-[#3a86ff] font-mono">
                   ₹{finalAmount.toLocaleString('en-IN')}
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
 
             {/* Smart Incentive Offer Banner if applicable */}
             {selectedCampaign.discountApplied && selectedCampaign.discountApplied.includes('REV5OFF') && (
-              <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-950/60 to-teal-950/60 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300">
+              <div className="p-3 rounded-sm bg-gradient-to-r from-emerald-950/60 to-teal-950/60 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-300">
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4 text-emerald-400" />
                   <span>AI Dunning Special: <strong>5% Instant Waiver Applied (REV5OFF)</strong></span>
@@ -176,13 +176,13 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('upi')}
-                  className={`p-3 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
+                  className={`p-3 rounded-sm border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                     paymentMethod === 'upi'
-                      ? 'bg-[#00d2ff]/15 border-[#00d2ff] text-white shadow-md'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#3a86ff]/15 border-[#00d2ff] text-white shadow-md'
+                      : 'bg-[#131A2F]/60 border-slate-800/80 text-slate-400 hover:border-slate-800/80/80'
                   }`}
                 >
-                  <Smartphone className="w-5 h-5 text-[#00d2ff]" />
+                  <Smartphone className="w-5 h-5 text-[#3a86ff]" />
                   <span className="text-xs font-bold">UPI Intent</span>
                 </button>
 
@@ -190,10 +190,10 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-3 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
+                  className={`p-3 rounded-sm border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                     paymentMethod === 'card'
-                      ? 'bg-[#00d2ff]/15 border-[#00d2ff] text-white shadow-md'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#3a86ff]/15 border-[#00d2ff] text-white shadow-md'
+                      : 'bg-[#131A2F]/60 border-slate-800/80 text-slate-400 hover:border-slate-800/80/80'
                   }`}
                 >
                   <CreditCard className="w-5 h-5 text-purple-400" />
@@ -204,10 +204,10 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('netbanking')}
-                  className={`p-3 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
+                  className={`p-3 rounded-sm border text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                     paymentMethod === 'netbanking'
-                      ? 'bg-[#00d2ff]/15 border-[#00d2ff] text-white shadow-md'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                      ? 'bg-[#3a86ff]/15 border-[#00d2ff] text-white shadow-md'
+                      : 'bg-[#131A2F]/60 border-slate-800/80 text-slate-400 hover:border-slate-800/80/80'
                   }`}
                 >
                   <Building2 className="w-5 h-5 text-amber-400" />
@@ -217,7 +217,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
 
               {/* UPI Provider options */}
               {paymentMethod === 'upi' && (
-                <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                <div className="p-3 bg-[#131A2F] rounded-sm border border-slate-800/80 space-y-2">
                   <div className="text-[11px] text-slate-400 font-semibold">Recommended UPI Apps:</div>
                   <div className="flex items-center gap-2">
                     {['gpay', 'phonepe', 'paytm'].map(app => (
@@ -225,10 +225,10 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
                         key={app}
                         type="button"
                         onClick={() => setUpiProvider(app)}
-                        className={`px-3 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-sm border text-xs font-bold uppercase tracking-wider cursor-pointer ${
                           upiProvider === app 
                             ? 'bg-[#3a86ff] border-[#3a86ff] text-white' 
-                            : 'bg-slate-950 border-slate-800 text-slate-400'
+                            : 'bg-slate-950 border-slate-800/80 text-slate-400'
                         }`}
                       >
                         {app}
@@ -243,7 +243,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
             <button
               onClick={handlePayNow}
               disabled={processing}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00d2ff] via-[#3a86ff] to-[#10b981] text-slate-950 font-extrabold text-sm shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3.5 rounded-sm bg-gradient-to-r from-[#3a86ff] via-[#3a86ff] to-[#10b981] text-slate-950 font-extrabold text-sm shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {processing ? (
                 <>
@@ -256,8 +256,8 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
               )}
             </button>
 
-            <div className="text-[11px] text-center text-slate-500 flex items-center justify-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#00d2ff]" />
+            <div className="text-[11px] text-center text-slate-400 flex items-center justify-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3a86ff]" />
               Secured by Razorpay Magic Checkout Protocol
             </div>
           </div>
