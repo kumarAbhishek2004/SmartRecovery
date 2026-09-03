@@ -11,7 +11,7 @@ export default function MockCheckoutModal({ campaign, onClose, onSuccess }) {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     try {
-      await fetch(`/api/checkout/${campaign.id}/success`, { method: 'POST' });
+      await fetch(`https://smartrecovery-rd4l.onrender.com/api/checkout/${campaign.id}/success`, { method: 'POST' });
       setIsProcessing(false);
       setIsSuccess(true);
       

@@ -56,7 +56,7 @@ export default function WhatsAppSimulator({ campaign, onClose, onCampaignRecover
     setIsTyping(true);
 
     try {
-      const response = await fetch('/api/chat/negotiate', {
+      const response = await fetch('https://smartrecovery-rd4l.onrender.com/api/chat/negotiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

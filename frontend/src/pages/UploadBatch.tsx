@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_BASE = 'https://smartrecovery-rd4l.onrender.com/api';
+
 export default function UploadBatch({ onIngested }: { onIngested: (batchId: string) => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -9,14 +11,14 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
     setError('');
     try {
       // Call the external sync endpoint
-      const res = await fetch('http://localhost:8000/api/ingest/simulate-external', {
+      const res = await fetch(`${API_BASE}/ingest/simulate-external`, {
         method: 'POST'
       });
       if (!res.ok) throw new Error('Failed to simulate external sync');
       const data = await res.json();
       
       // Run the recovery process on the newly generated batch
-      const recRes = await fetch(`http://localhost:8000/api/recovery/${data.batch_id}`, {
+      const recRes = await fetch(`${API_BASE}/recovery/${data.batch_id}`, {
         method: 'POST'
       });
       if (!recRes.ok) throw new Error('Failed to run recovery engine');
@@ -40,7 +42,7 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
       const events = text.trim().split('\n').map(line => JSON.parse(line));
       
       // Ingest the file data
-      const res = await fetch('http://localhost:8000/api/ingest', {
+      const res = await fetch(`${API_BASE}/ingest`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(events)
@@ -50,7 +52,7 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
       const data = await res.json();
       
       // Run the recovery process
-      const recRes = await fetch(`http://localhost:8000/api/recovery/${data.batch_id}`, {
+      const recRes = await fetch(`${API_BASE}/recovery/${data.batch_id}`, {
         method: 'POST'
       });
       if (!recRes.ok) throw new Error('Failed to run recovery engine');
@@ -73,7 +75,7 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
       const formData = new FormData();
       formData.append('file', file);
       
-      const res = await fetch('http://localhost:8000/api/ingest/transform-csv', {
+      const res = await fetch(`${API_BASE}/ingest/transform-csv`, {
         method: 'POST',
         body: formData
       });
@@ -82,7 +84,7 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
       const data = await res.json();
       
       // Run the recovery process
-      const recRes = await fetch(`http://localhost:8000/api/recovery/${data.batch_id}`, {
+      const recRes = await fetch(`${API_BASE}/recovery/${data.batch_id}`, {
         method: 'POST'
       });
       if (!recRes.ok) throw new Error('Failed to run recovery engine');
@@ -99,13 +101,13 @@ export default function UploadBatch({ onIngested }: { onIngested: (batchId: stri
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:8000/api/ingest/load-sample', {
+      const res = await fetch(`${API_BASE}/ingest/load-sample`, {
         method: 'POST'
       });
       if (!res.ok) throw new Error('Failed to load sample data from backend');
       const data = await res.json();
       
-      const recRes = await fetch(`http://localhost:8000/api/recovery/${data.batch_id}`, {
+      const recRes = await fetch(`${API_BASE}/recovery/${data.batch_id}`, {
         method: 'POST'
       });
       if (!recRes.ok) throw new Error('Failed to run recovery engine');

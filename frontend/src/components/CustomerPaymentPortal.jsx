@@ -52,7 +52,7 @@ export default function CustomerPaymentPortal({ campaignId, campaigns = [], onPa
   const handlePayNow = async () => {
     setProcessing(true);
     try {
-      const res = await fetch('/api/recover-payment', {
+      const res = await fetch('https://smartrecovery-rd4l.onrender.com/api/recover-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

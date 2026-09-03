@@ -17,6 +17,8 @@ import {
   RotateCcw
 } from 'lucide-react';
 
+const API_BASE = 'https://smartrecovery-rd4l.onrender.com/api';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard | simulator | campaigns | portal | doc
   const [overviewData, setOverviewData] = useState(null);
@@ -29,8 +31,8 @@ export default function App() {
   const fetchData = async () => {
     try {
       const [ovRes, cmpRes] = await Promise.all([
-        fetch('/api/overview'),
-        fetch('/api/campaigns')
+        fetch(`${API_BASE}/overview`),
+        fetch(`${API_BASE}/campaigns`)
       ]);
 
       if (ovRes.ok && cmpRes.ok) {
@@ -56,7 +58,7 @@ export default function App() {
 
   const handleResetSession = async () => {
     try {
-      await fetch('/api/reset', { method: 'POST' });
+      await fetch(`${API_BASE}/reset`, { method: 'POST' });
       fetchData();
       setActiveTab('dashboard');
     } catch (e) {
@@ -66,7 +68,7 @@ export default function App() {
 
   const handleDeleteCampaign = async (campaignId) => {
     try {
-      await fetch(`/api/campaigns/${campaignId}`, { method: 'DELETE' });
+      await fetch(`${API_BASE}/campaigns/${campaignId}`, { method: 'DELETE' });
       fetchData();
     } catch (e) {
       console.error(e);
@@ -77,7 +79,7 @@ export default function App() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await fetch('/api/upload-csv', {
+      const res = await fetch(`${API_BASE}/upload-csv`, {
         method: 'POST',
         body: formData
       });

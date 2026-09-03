@@ -78,7 +78,7 @@ export default function RecoverySimulator({ onSimulate, onRecoverPayment, onNavi
     setSimulationResult(null);
 
     try {
-      const res = await fetch('/api/simulate-failure', {
+      const res = await fetch('https://smartrecovery-rd4l.onrender.com/api/simulate-failure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

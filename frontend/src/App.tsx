@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import UploadBatch from './pages/UploadBatch';
 import PaymentPortal from './pages/PaymentPortal';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://smartrecovery-rd4l.onrender.com/api';
 
 export default function App() {
   const queryParams = new URLSearchParams(window.location.search);
