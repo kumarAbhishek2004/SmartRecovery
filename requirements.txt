@@ -5,3 +5,4 @@ pytest
 httpx
 groq
 python-dotenv
+python-multipart==0.0.20
