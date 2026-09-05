@@ -1,8 +1,10 @@
 # SmartRecovery Assistant 🚀
+
 An end-to-end AI-powered autonomous multi-agent pipeline designed specifically for Razorpay Merchants. SmartRecovery intercepts failed payment webhooks and triggers a coordinated swarm of AI agents to diagnose errors, optimize retries, and recover lost ARR through conversational dunning and dynamic discount incentives.
 
 ## 1. System Design 🏛️
-The system consists of a Next.js/Vite React frontend dashboard communicating with a FastAPI backend server. The backend runs an LLM-powered multi-agent router that utilizes specialized agents for failure diagnosis, uptime scheduling, and Groq-powered conversational AI.
+
+The system consists of a Vite/React frontend dashboard communicating with a FastAPI backend server. The backend runs an LLM-powered multi-agent router that utilizes specialized agents for failure diagnosis, uptime scheduling, and Groq-powered conversational AI.
 
 `mermaid
 graph TD
@@ -11,7 +13,7 @@ graph TD
     subgraph Multi-Agent Engine
         B --> C[Agent 1: Failure Diagnoser & Risk Engine]
         C --> D[Agent 2: Smart Retry Router]
-        D --> E[Agent 3: Conversational Dunning Bot - Groq LLM]
+        D --> E[Agent 3: Conversational Dunning Bot]
         E --> F[Agent 4: Payment Link Generator]
     end
     
@@ -29,15 +31,32 @@ graph TD
 `
 
 **System Data Flow:**
+
 - **Webhook Ingestion:** The backend intercepts a payment.failed POST request from the Razorpay Gateway.
-- **Diagnosis & Risk:** Agent 1 parses the error code and calculates a dynamic churn Risk Score.
-- **Routing & Scheduling:** Agent 2 checks simulated bank node uptimes to defer retries if necessary.
-- **AI Dunning Strategy:** Agent 3 (Conversational Bot powered by Groq) adopts a support persona to engage the user via WhatsApp/Email, dynamically offering tiered discounts (like REV5OFF).
+- **Diagnosis & Risk:** Agent 1 parses the error code and calculates a dynamic churn Risk Score deterministically based on transaction volume and plan tier.
+- **Routing & Scheduling:** Agent 2 checks simulated bank node uptimes to defer retries if necessary, preventing redundant decline fees.
+- **AI Dunning Strategy:** Agent 3 (Conversational Bot powered by Groq llama3) adopts a support persona to engage the user via WhatsApp/Email, dynamically offering tiered discounts (like REV5OFF).
 - **Payment & Dashboard Update:** Agent 4 generates an instant 1-Tap UPI Intent or Magic Checkout link. Once paid, the frontend Command Center Dashboard is instantly updated via the state manager.
 
-## 2. Agent Design & Retrieval 🧠
+## 2. Agent Design & Logic 🧠
+
+`mermaid
+graph TD
+    A[Failed Payment Event] --> B{Risk Engine}
+    
+    B -->|Low Risk| C[Standard Email Dunning]
+    B -->|High Risk| D[Conversational Agent]
+    
+    D --> E{Bank Node Uptime}
+    E -->|Offline| F[Defer Retry / Pause Campaign]
+    E -->|Online| G[Dispatch WhatsApp Bot]
+    
+    G --> H[Negotiate Dynamic Discount]
+    H --> I[Generate Razorpay UPI Link]
+`
 
 ### 📂 Project File Structure
+
 `	ext
 ai-revenue-recovery-agent/
 ├── app/                      # FastAPI backend
@@ -59,14 +78,13 @@ ai-revenue-recovery-agent/
 │   └── package.json          # Node dependencies
 ├── db.json                   # Local persistent JSON database for telemetry state
 ├── .env                      # Environment variables (Groq API Key)
-├── requirements.txt          # Python dependencies
-└── README.md                 # Documentation (This file)
+└── requirements.txt          # Python dependencies
 `
 
-### 🌟 Key Features
+## 🌟 Key Features
 
-**1. Multi-Agent Orchestration**
-Instead of a single monolithic script, the system delegates recovery tasks to specialized sub-agents: Diagnoser, Scheduler, Conversational Bot, and Link Dispatcher.
+**1. Multi-Agent Orchestration Architecture**
+Instead of a single monolithic script, the system delegates recovery tasks to specialized sub-agents: Diagnoser, Scheduler, Conversational Bot, and Link Dispatcher. We get the best of both worlds: deterministic routing combined with human-like conversation.
 
 **2. Dynamic Risk Scoring Engine**
 Calculates a 0-100 customer churn probability based on deterministic metrics: Failure Root Cause, Subscription Plan Tier (Enterprise vs. Basic), and Transaction Amount. High-risk customers are automatically escalated to conversational agents.
@@ -80,13 +98,15 @@ Reduces redundant gateway decline fees by deferring automatic payment retries du
 **5. Enterprise Command Center Dashboard**
 A fully responsive, dark-mode terminal layout featuring real-time Recharts telemetry, agent subsystem status monitors, and root-cause failure distribution charts.
 
-### 🛠️ Technology Stack
-- **Frontend:** React, Vite, Tailwind CSS, Recharts, Lucide-React
-- **Backend:** FastAPI (Python), Uvicorn, Pydantic
-- **AI/LLM:** Groq API (High-speed Llama 3 inference)
-- **Database:** Local JSON File Storage (db.json)
+## 🛠️ Technology Stack
 
-### 🚀 Local Installation & Running Instructions
+- **Frontend:** React, Vite, CSS Grid/Flexbox, Recharts, Lucide Icons
+- **Backend:** FastAPI (Python), Uvicorn, JSON DB
+- **Agent Framework:** Custom Multi-Agent Pipeline
+- **LLM Provider:** Groq (llama3 model family)
+- **Data & Parsing:** Pydantic validation, Razorpay Webhooks
+
+## 🚀 Local Installation & Running Instructions
 
 **Prerequisites**
 - Node.js (v18+)
@@ -116,21 +136,14 @@ npm run dev
 `
 *Note: The frontend will be available at http://localhost:5173.*
 
-### 🧪 Testing and Evaluation
+## 🧪 Testing and Evaluation
 
 **1. Live Webhook Simulator Test**
-1. Open the dashboard at http://localhost:5173.
-2. Click the **INJECT FAILURE EVENT** button on the left sidebar to send a mock Razorpay payment.failed webhook.
-3. Watch the Risk Scoring engine update the Telemetry Chart instantly.
+- Open the dashboard at http://localhost:5173.
+- Click the **INJECT FAILURE EVENT** button on the left sidebar to send a mock Razorpay payment.failed webhook.
+- Watch the Risk Scoring engine update the Telemetry Chart instantly.
 
 **2. Conversational Agent Test**
-1. Navigate to the **Active Campaigns** tab.
-2. Click the **WhatsApp icon** on a high-risk failure to open the Chat Simulator.
-3. Chat with the Groq AI agent, negotiate a discount, and click the generated Razorpay Magic Checkout link to recover the revenue!
-
-### 🚀 Production Deployment Strategy
-
-This stack is designed to be pushed to production rapidly. For a scalable deployment:
-- **Database (Supabase / AWS RDS):** Replace the local db.json with a managed PostgreSQL instance for high concurrency.
-- **Backend (Render.com / Google Cloud Run):** Containerize the FastAPI app using Docker and deploy to a serverless container platform to handle webhook spikes.
-- **Frontend (Vercel):** Connect the GitHub repository to Vercel. Set NEXT_PUBLIC_API_URL to point to your deployed backend. Vercel will host the dashboard at the edge for global ultra-low latency.
+- Navigate to the **Active Campaigns** tab.
+- Click the **WhatsApp icon** on a high-risk failure to open the Chat Simulator.
+- Chat with the Groq AI agent, negotiate a discount, and click the generated Razorpay Magic Checkout link to recover the revenue!
