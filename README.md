@@ -4,7 +4,7 @@ An end-to-end AI-powered autonomous multi-agent pipeline designed specifically f
 ## 1. System Design 🏛️
 The system consists of a Next.js/Vite React frontend dashboard communicating with a FastAPI backend server. The backend runs an LLM-powered multi-agent router that utilizes specialized agents for failure diagnosis, uptime scheduling, and Groq-powered conversational AI.
 
-```mermaid
+`mermaid
 graph TD
     A[Razorpay Webhook: payment.failed] --> B[FastAPI Ingestion Layer]
     
@@ -26,19 +26,19 @@ graph TD
     style D fill:#0b132b,stroke:#3a86ff,stroke-width:2px,color:#fff
     style E fill:#0b132b,stroke:#3a86ff,stroke-width:2px,color:#fff
     style F fill:#0b132b,stroke:#3a86ff,stroke-width:2px,color:#fff
-```
+`
 
 **System Data Flow:**
-- **Webhook Ingestion:** The backend intercepts a `payment.failed` POST request from the Razorpay Gateway.
+- **Webhook Ingestion:** The backend intercepts a payment.failed POST request from the Razorpay Gateway.
 - **Diagnosis & Risk:** Agent 1 parses the error code and calculates a dynamic churn Risk Score.
 - **Routing & Scheduling:** Agent 2 checks simulated bank node uptimes to defer retries if necessary.
-- **AI Dunning Strategy:** Agent 3 (Conversational Bot powered by Groq) adopts a support persona to engage the user via WhatsApp/Email, dynamically offering tiered discounts (like `REV5OFF`).
+- **AI Dunning Strategy:** Agent 3 (Conversational Bot powered by Groq) adopts a support persona to engage the user via WhatsApp/Email, dynamically offering tiered discounts (like REV5OFF).
 - **Payment & Dashboard Update:** Agent 4 generates an instant 1-Tap UPI Intent or Magic Checkout link. Once paid, the frontend Command Center Dashboard is instantly updated via the state manager.
 
 ## 2. Agent Design & Retrieval 🧠
 
 ### 📂 Project File Structure
-```text
+`	ext
 ai-revenue-recovery-agent/
 ├── app/                      # FastAPI backend
 │   ├── api/
@@ -60,10 +60,8 @@ ai-revenue-recovery-agent/
 ├── db.json                   # Local persistent JSON database for telemetry state
 ├── .env                      # Environment variables (Groq API Key)
 ├── requirements.txt          # Python dependencies
-├── PITCH_SCRIPT.md           # 5-Minute video pitch script
-├── SYSTEM_ARCHITECTURE.md    # Detailed technical architecture diagrams
 └── README.md                 # Documentation (This file)
-```
+`
 
 ### 🌟 Key Features
 
@@ -86,7 +84,7 @@ A fully responsive, dark-mode terminal layout featuring real-time Recharts telem
 - **Frontend:** React, Vite, Tailwind CSS, Recharts, Lucide-React
 - **Backend:** FastAPI (Python), Uvicorn, Pydantic
 - **AI/LLM:** Groq API (High-speed Llama 3 inference)
-- **Database:** Local JSON File Storage (`db.json`)
+- **Database:** Local JSON File Storage (db.json)
 
 ### 🚀 Local Installation & Running Instructions
 
@@ -96,33 +94,33 @@ A fully responsive, dark-mode terminal layout featuring real-time Recharts telem
 - A valid Groq API Key
 
 **1. Environment Configuration**
-Create a `.env` file in the root directory and add your Groq API Key:
-```env
+Create a .env file in the root directory and add your Groq API Key:
+`env
 GROQ_API_KEY=gsk_your_groq_api_key_here
-```
+`
 
 **2. Boot the Backend**
 Install the Python dependencies and start the FastAPI server:
-```bash
+`ash
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
-```
+`
 *Note: The backend will be available at http://localhost:8000.*
 
 **3. Boot the Frontend**
 Open a new terminal, navigate to the frontend directory, install dependencies, and start the Vite dev server:
-```bash
+`ash
 cd frontend
 npm install
 npm run dev
-```
+`
 *Note: The frontend will be available at http://localhost:5173.*
 
 ### 🧪 Testing and Evaluation
 
 **1. Live Webhook Simulator Test**
-1. Open the dashboard at `http://localhost:5173`.
-2. Click the **INJECT FAILURE EVENT** button on the left sidebar to send a mock Razorpay `payment.failed` webhook.
+1. Open the dashboard at http://localhost:5173.
+2. Click the **INJECT FAILURE EVENT** button on the left sidebar to send a mock Razorpay payment.failed webhook.
 3. Watch the Risk Scoring engine update the Telemetry Chart instantly.
 
 **2. Conversational Agent Test**
@@ -133,6 +131,6 @@ npm run dev
 ### 🚀 Production Deployment Strategy
 
 This stack is designed to be pushed to production rapidly. For a scalable deployment:
-- **Database (Supabase / AWS RDS):** Replace the local `db.json` with a managed PostgreSQL instance for high concurrency.
+- **Database (Supabase / AWS RDS):** Replace the local db.json with a managed PostgreSQL instance for high concurrency.
 - **Backend (Render.com / Google Cloud Run):** Containerize the FastAPI app using Docker and deploy to a serverless container platform to handle webhook spikes.
-- **Frontend (Vercel):** Connect the GitHub repository to Vercel. Set `NEXT_PUBLIC_API_URL` to point to your deployed backend. Vercel will host the dashboard at the edge for global ultra-low latency.
+- **Frontend (Vercel):** Connect the GitHub repository to Vercel. Set NEXT_PUBLIC_API_URL to point to your deployed backend. Vercel will host the dashboard at the edge for global ultra-low latency.
